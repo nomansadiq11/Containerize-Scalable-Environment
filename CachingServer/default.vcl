@@ -3,7 +3,7 @@ vcl 4.0;
 import std;
 
 backend default {
-  .host = "webserver1";
-  .port = "80";
+  .host = "loadbalancer";
+  .port = "5000";
   .first_byte_timeout = 600s;
 }
