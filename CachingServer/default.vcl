@@ -1,6 +1,9 @@
 vcl 4.0;
 
+import std;
+
 backend default {
-  .host = "www.nytimes.com";
+  .host = "webserver1";
   .port = "80";
+  .first_byte_timeout = 600s;
 }
