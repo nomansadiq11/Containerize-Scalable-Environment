@@ -3,6 +3,7 @@ services:
   varnish:
     build:
       context: ./CachingServer/
+    container_name: cacheserver
     volumes:
       - ./CachingServer/default.vcl:/usr/local/etc/varnish/default.vcl
     ports:
@@ -10,7 +11,8 @@ services:
     depends_on:
     - haproxy
   haproxy:
-    image: eeacms/haproxy
+    build:
+      context: ./LoadBalancer/
     container_name: loadbalancer
     depends_on:
     - webserver1
