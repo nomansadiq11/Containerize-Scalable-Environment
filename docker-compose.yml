@@ -1,0 +1,42 @@
+version: "2"
+services:
+  varnish:
+    build:
+      context: ./CachingServer/
+    container_name: cacheserver
+    volumes:
+      - ./CachingServer/default.vcl:/usr/local/etc/varnish/default.vcl
+    ports:
+    - "8081:80"
+    depends_on:
+    - haproxy
+  haproxy:
+    build:
+      context: ./LoadBalancer/
+    container_name: loadbalancer
+    depends_on:
+    - webserver1
+    - webserver2
+    ports:
+    - "5000:5000"
+    - "1936:1936"
+    environment:
+      BACKENDS: "webserver1 webserver2"
+      DNS_ENABLED: "true"
+      LOG_LEVEL: "info"
+  webserver1:
+    container_name: webserver1
+    build:
+      context: ./WebServer/
+    volumes:
+      - ./WebServer/app/index.html:/usr/share/nginx/html/index.html
+    environment:
+      PORT: "3002:80"
+  webserver2:
+    container_name: webserver2
+    build:
+      context: ./WebServer/
+    volumes:
+      - ./WebServer/app2/index.html:/usr/share/nginx/html/index.html
+    environment:
+      PORT: "3002:80"
